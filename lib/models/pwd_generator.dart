@@ -19,7 +19,7 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
   String newPassword = '';
   Color _color = Colors.blue;
   String isOk = '';
-  TextEditingController _passwordLength = TextEditingController();
+  final TextEditingController _passwordLength = TextEditingController();
   final password = RandomPasswordGenerator();
   @override
   void initState() {
@@ -50,8 +50,12 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
-          title: const Text('Random Password Generator'),
+          title: Text(
+            'Random Password Generator',
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
         ),
         body: Center(
           child: SingleChildScrollView(
@@ -63,8 +67,14 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Text('Numbers'),
+                        Text(
+                          'Numbers',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
                         Checkbox(
+                          fillColor: MaterialStateColor.resolveWith((states) {
+                            return Colors.blue;
+                          }),
                           value: _isWithNumbers,
                           onChanged: (value) => {
                             setState(() {
@@ -77,8 +87,14 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Text('Special Characters'),
+                        Text(
+                          'Special Characters',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
                         Checkbox(
+                          fillColor: MaterialStateColor.resolveWith((states) {
+                            return Colors.blue;
+                          }),
                           value: _isWithSpecial,
                           onChanged: (value) => {
                             setState(
@@ -102,8 +118,14 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Text('Lower Case'),
+                        Text(
+                          'Lower Case',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
                         Checkbox(
+                          fillColor: MaterialStateColor.resolveWith((states) {
+                            return Colors.blue;
+                          }),
                           value: _isWithLetters,
                           onChanged: (value) => {
                             setState(() {
@@ -116,8 +138,14 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Text('Upper Case'),
+                        Text(
+                          'Upper Case',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
                         Checkbox(
+                          fillColor: MaterialStateColor.resolveWith((states) {
+                            return Colors.blue;
+                          }),
                           value: _isWithUppercase,
                           onChanged: (value) => {
                             setState(() {
@@ -138,15 +166,16 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                     controller: _passwordLength,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
+                        borderRadius: BorderRadius.circular(12.0),
                         borderSide: const BorderSide(),
                       ),
-                      filled: true,
+                      // filled: true,
                       fillColor: Colors.grey[300],
                       labelText: 'Enter Length',
-                      labelStyle: const TextStyle(color: Colors.blue),
+                      labelStyle: Theme.of(context).textTheme.titleLarge,
                     ),
                     keyboardType: TextInputType.number,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
                 const SizedBox(
@@ -172,13 +201,16 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                         password.checkPassword(password: newPassword);
                     if (passwordstrength < 0.3) {
                       _color = Colors.red;
-                      isOk = 'This password is weak!';
+                      isOk =
+                          'According to Password Sense, this password is weak!';
                     } else if (passwordstrength < 0.7) {
                       _color = Colors.blue;
-                      isOk = 'This password is Good';
+                      isOk =
+                          'According to Password Sense, this password is Good';
                     } else {
-                      _color = Colors.green;
-                      isOk = 'This password is Strong';
+                      _color = Colors.blueGrey;
+                      isOk =
+                          'According to Password Sense, this password is Strong';
                     }
                     if (newPassword.length < 8 ||
                         newPassword.isEmpty ||
@@ -187,8 +219,10 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                           context: context,
                           builder: (ctx) {
                             return AlertDialog(
-                              title: const Text(
-                                  "Password Length provided is not OK!"),
+                              title: Text(
+                                "Password Length provided is not OK!",
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
                               content: const Text(
                                   "Minimum password that can be entered is 8 and at max 50"),
                               actions: [
@@ -231,7 +265,11 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           isOk,
-                          style: TextStyle(color: _color, fontSize: 25),
+                          style: TextStyle(
+                            color: _color,
+                            fontFamily: 'Lato',
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ),
@@ -241,12 +279,28 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                     child: SingleChildScrollView(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          decoration: BoxDecoration(),
-                          child: SelectableText(
-                            newPassword,
-                            style: TextStyle(color: _color, fontSize: 25),
-                          ),
+                        child: Row(
+                          children: [
+                            Text(
+                              "Your Password : ",
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10),
+                                ),
+                              ),
+                              width: MediaQuery.of(context).size.width * 0.50,
+                              padding: const EdgeInsets.all(12),
+                              child: SelectableText(newPassword,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                            ),
+                          ],
                         ),
                       ),
                     ),
