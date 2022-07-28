@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:password_generator/themes/themes.dart';
 
 import './models/pwd_generator.dart';
 
@@ -14,9 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: MyThemes.darkTheme,
       home: const PasswordGenerator(),
     );
   }
