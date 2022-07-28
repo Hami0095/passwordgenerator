@@ -183,12 +183,35 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                     isOk = 'This password is Good';
                   } else {
                     _color = Colors.green;
-                    isOk = 'This passsword is Strong';
+                    isOk = 'This password is Strong';
                   }
-                  if (newPassword.length < 8) {
-                    const AlertDialog(
-                      actions: [],
-                    );
+                  if (newPassword.length < 8 ||
+                      newPassword.isEmpty ||
+                      newPassword == null ||
+                      newPassword.length > 50) {
+                    showDialog(
+                        context: context,
+                        builder: (ctx) {
+                          return AlertDialog(
+                            title: const Text(
+                                "Password Length provided is not OK!"),
+                            content: const Text(
+                                "Minimum password that can be entered is 8 and at max 50"),
+                            actions: [
+                              TextButton(
+                                child: const Text(
+                                  'No',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(ctx).pop(false);
+                                },
+                              ),
+                            ],
+                          );
+                        });
                   }
                   setState(() {});
                 },
