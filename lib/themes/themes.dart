@@ -98,7 +98,7 @@ class MyThemes {
     ),
     appBarTheme: const AppBarTheme(
       titleTextStyle: TextStyle(fontFamily: 'lato', color: Colors.white10),
-      backgroundColor: Colors.lightBlueAccent,
+      backgroundColor: Colors.black,
       systemOverlayStyle: SystemUiOverlayStyle.light,
       // textTheme:
     ),

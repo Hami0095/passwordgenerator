@@ -1,41 +1,33 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:password_generator/pages/home_page.dart';
 
-import 'signin_page.dart';
+import '../pages/signup_page.dart';
+import 'home_page.dart';
 
-class SignUpPage extends StatefulWidget {
-  static const routeName = '/signUp';
-
-  const SignUpPage({Key? key}) : super(key: key);
+class SignInPage extends StatefulWidget {
+  static const routeName = '/signIn';
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  final pwdFocus = FocusNode();
+class _SignInPageState extends State<SignInPage> {
   final _firebaseAuth = FirebaseAuth.instance;
-  final _pwdController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _emailController = TextEditingController();
 
-  Future<void> signUpAuth() async {
+  final _pwdFocus = FocusNode();
+
+  Future<void> signIn() async {
     try {
-      await _firebaseAuth.createUserWithEmailAndPassword(
-        email: _emailController.text,
-        password: _pwdController.text,
-      );
+      await _firebaseAuth.signInWithEmailAndPassword(
+          email: _emailController.text, password: _passwordController.text);
       Navigator.of(context).pushNamed(HomePage.routeName);
     } on FirebaseAuthException catch (e) {
       print(e);
     }
-  }
-
-  @override
-  void dispose() {
-    pwdFocus.dispose();
-    super.dispose();
   }
 
   @override
@@ -51,19 +43,28 @@ class _SignUpPageState extends State<SignUpPage> {
               SizedBox(
                 height: h * 0.35,
                 width: w,
-                child: Image.asset('assets/images/signup.jpg'),
+                child: Image.asset(
+                  'assets/images/singin.jpg',
+                  fit: BoxFit.contain,
+                ),
               ),
               Container(
-                margin: const EdgeInsets.all(14),
+                margin: const EdgeInsets.all(12),
                 child: Column(
                   children: [
-                    Text(
-                      'Welcome to Your Own Password Manager',
+                    const Text(
+                      "Login Page",
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineLarge,
+                      style: TextStyle(
+                        fontSize: 23,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        //fontfamily:
+                      ),
                     ),
                     const SizedBox(height: 20),
                     Container(
+                      height: MediaQuery.of(context).size.height * 0.065,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         boxShadow: [
@@ -100,26 +101,23 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
-                            gapPadding: 2.0,
+                            gapPadding: 5.0,
                           ),
                         ),
                         onFieldSubmitted: (_) {
-                          FocusScope.of(context).requestFocus(pwdFocus);
-                        },
-                        onEditingComplete: () {
-                          setState(() {});
+                          FocusScope.of(context).requestFocus(_pwdFocus);
                         },
                       ),
                     ),
                   ],
                 ),
               ),
-
               Container(
-                margin: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(14),
                 child: Column(
                   children: [
                     Container(
+                      height: MediaQuery.of(context).size.height * 0.065,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         boxShadow: [
@@ -133,11 +131,11 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: TextFormField(
-                        focusNode: pwdFocus,
+                        controller: _passwordController,
                         obscureText: true,
-                        controller: _pwdController,
+                        focusNode: _pwdFocus,
                         decoration: InputDecoration(
-                          hintText: 'Create your Password',
+                          hintText: 'Enter your Password',
                           prefixIcon: const Icon(
                             Icons.password,
                             color: Color.fromARGB(255, 9, 98, 170),
@@ -161,87 +159,90 @@ class _SignUpPageState extends State<SignUpPage> {
                             gapPadding: 5.0,
                           ),
                         ),
-                        onFieldSubmitted: (_) => signUpAuth(),
+                        onEditingComplete: signIn,
                       ),
                     ),
                   ],
                 ),
               ),
-
-              const SizedBox(
-                height: 10,
-              ),
-              // Btn: signUp->
-              GestureDetector(
-                onTap: () {
-                  signUpAuth();
-                },
+              InkWell(
+                onTap: signIn,
                 child: Container(
-                  height: h * 0.025,
-                  width: w * 0.4,
+                  height: h * 0.08,
+                  width: w * 0.45,
                   decoration: BoxDecoration(
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
-                        color: Colors.grey.shade300,
-                        offset: const Offset(0, 20),
+                        color: Colors.white,
+                        offset: Offset(0, 25),
                         blurRadius: 2.5,
-                        spreadRadius: -10,
+                        spreadRadius: -35,
                         blurStyle: BlurStyle.solid,
                       ),
                     ],
-                    borderRadius: BorderRadius.circular(30),
+                    borderRadius: BorderRadius.circular(50),
                   ),
                   child: Center(
                     child: Text(
-                      'Sign Up',
+                      'Sign In',
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
                   ),
                 ),
               ),
               SizedBox(
-                height: w * 0.1,
+                height: w * 0.04,
               ),
-              // Already Have an Account?
-              RichText(
-                text: TextSpan(
-                  text: "Already have an Account?",
-                  style: Theme.of(context).textTheme.bodySmall,
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () =>
-                        Navigator.of(context).pushNamed(SignInPage.routeName),
+              const Divider(),
+              SizedBox(
+                height: w * 0.01,
+              ),
+              Center(
+                child: Text(
+                  "OR",
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
               SizedBox(
-                height: w * 0.1,
+                height: w * 0.001,
               ),
-              // TextSpan : Don't have an account? Create
+              IconButton(
+                onPressed: () {
+                  // Do Sign in through google!
+                  // TODO: GOOGLE LOGIN!
+                },
+                icon: Image.network(
+                  'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.ybCkn_y7YH0Ri_oAnCW3NAHaE8%26pid%3DApi%26h%3D160&f=1',
+                  height: 120,
+                ),
+                iconSize: 90,
+              ),
+              SizedBox(
+                height: w * 0.01,
+              ),
               RichText(
-                text: const TextSpan(
-                  text: "SignUp using one of the following methods?",
-                  style: TextStyle(
+                text: TextSpan(
+                  text: "Don't have an account?",
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 12,
                   ),
+                  children: [
+                    TextSpan(
+                      text: " Let's Create",
+                      style: const TextStyle(
+                        color: Color.fromARGB(255, 0, 90, 163),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => Navigator.of(context)
+                            .pushNamed(SignUpPage.routeName),
+                    ),
+                  ],
                 ),
               ),
-              // Showing the icons of google
-              // TODO GOOGLE LOGIN
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    // AuthController.instace.googleLogin();
-                  },
-                  child: const CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(
-                      'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.1Nl9otEDi23qnVEQXPJuKQHaHa%26pid%3DApi%26h%3D160&f=1',
-                    ),
-                  ),
-                ),
-              )
             ],
           ),
         ),
