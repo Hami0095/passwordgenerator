@@ -163,6 +163,9 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: TextField(
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
                     controller: _passwordLength,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
